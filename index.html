@@ -189,6 +189,24 @@ nav.solid .nav-line{width:100%;}
   border-radius:100px;
   padding:16px 48px !important;
 }
+.mob-theme-btn{
+  margin-top:12px;
+  border:1px solid rgba(29,185,84,0.22);
+  background:rgba(29,185,84,0.08);
+  color:inherit;
+  font-family:'Outfit',sans-serif;
+  font-weight:700;
+  font-size:15px;
+  letter-spacing:1px;
+  border-radius:100px;
+  padding:12px 22px;
+  transition:all 0.3s;
+}
+.mob-theme-btn:hover{
+  color:var(--negro);
+  background:var(--verde);
+  transform:translateY(-2px);
+}
 
 /* ══ HERO ══ */
 .hero{
@@ -423,7 +441,8 @@ nav.solid .nav-line{width:100%;}
   pointer-events:none;
 }
 .hero-logo-img{
-  width:82%;
+  width:min(82%, 420px);
+  max-width:100%;
   opacity:0;
   animation:logoIn 1.2s cubic-bezier(0.22,1,0.36,1) 0.5s forwards, logoFloat 10s ease-in-out 1.7s infinite;
   filter:drop-shadow(0 0 50px rgba(29,185,84,0.2));
@@ -912,7 +931,9 @@ nav.solid .nav-line{width:100%;}
 /* RESPONSIVE */
 @media(max-width:900px){
   nav{padding:0 20px;}
-  .nav-links,.nav-right{display:none;}
+  .nav-links{display:none;}
+  .nav-right{display:flex;align-items:center;gap:10px;margin-left:auto;}
+  .nav-cta{display:none;}
   .nav-ham{display:flex !important;}
   .hero{grid-template-columns:1fr;}
   .hero-left{padding:100px 24px 60px;padding-right:24px;max-width:100%;}
@@ -929,16 +950,35 @@ nav.solid .nav-line{width:100%;}
 @media(max-width:768px){
   nav{padding:10px 16px;height:auto;min-height:68px;}
   nav.solid{height:auto;min-height:64px;}
-  .nav-logo{gap:10px;max-width:75%;}
+  .nav-logo{gap:10px;max-width:calc(100% - 110px);}
   .nav-logo img{height:38px;}
   .nav-brand{font-size:15px;letter-spacing:1px;line-height:1.05;}
+  .nav-right{gap:8px;}
+  .theme-toggle{
+    width:auto;
+    min-width:78px;
+    height:30px;
+    padding:0 10px 0 28px;
+    display:inline-flex;
+    align-items:center;
+    justify-content:flex-end;
+    box-shadow:0 8px 18px rgba(29,185,84,0.16);
+  }
+  .theme-toggle::after{
+    content:'Tema';
+    font-size:10px;
+    font-weight:800;
+    letter-spacing:0.8px;
+    color:var(--blanco);
+  }
+  [data-theme="light"] .theme-toggle::after{color:#111;}
   .mob a{font-size:32px;}
   .mob-cta{font-size:15px !important;padding:14px 28px !important;}
 
   .hero{min-height:auto;grid-template-columns:1fr;}
   .hero-left{padding:96px 18px 40px;padding-right:18px;max-width:100%;}
-  .hero-right{position:relative;top:auto;right:auto;bottom:auto;width:100%;height:220px;}
-  .hero-logo-img{width:min(78vw,320px);}
+  .hero-right{position:relative;top:auto;right:auto;bottom:auto;width:100%;height:180px;margin-top:6px;}
+  .hero-logo-img{width:min(60vw,220px);max-width:220px;}
   .hero-title{font-size:clamp(40px,14vw,58px);letter-spacing:-1.5px;}
   .hero-sub{margin-top:20px;font-size:12px;letter-spacing:1.2px;}
   .hero-tag{font-size:9px;letter-spacing:2px;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
@@ -1003,11 +1043,14 @@ nav.solid .nav-line{width:100%;}
 
 @media(max-width:480px){
   nav{padding:8px 12px;}
-  .nav-logo{max-width:80%;}
+  .nav-logo{max-width:calc(100% - 102px);}
   .nav-brand{font-size:13px;}
+  .theme-toggle{min-width:72px;height:28px;}
   .mob a{font-size:28px;}
 
   .hero-left{padding:88px 14px 32px;padding-right:14px;max-width:100%;}
+  .hero-right{height:150px;}
+  .hero-logo-img{width:min(58vw,180px);max-width:180px;}
   .hero-title{font-size:clamp(34px,13vw,46px);}
   .hero-sub{font-size:11px;}
   .pill{width:calc(50% - 4px);text-align:center;justify-content:center;}
@@ -1673,10 +1716,10 @@ footer {
   </ul>
 
   <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" onclick="toggleTheme()" title="Cambiar tema"></button>
+    <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" title="Cambiar tema" aria-label="Cambiar a modo claro" aria-pressed="false"></button>
     <a href="#contacto" class="nav-cta">Clase Gratis</a>
   </div>
-  <button class="nav-ham" id="ham" onclick="toggleMob()"><span></span><span></span><span></span></button>
+  <button class="nav-ham" id="ham" type="button" onclick="toggleMob()" aria-label="Abrir menú"><span></span><span></span><span></span></button>
 </nav>
 
 <div class="mob" id="mob">
@@ -1685,6 +1728,7 @@ footer {
   <a href="#horarios" onclick="toggleMob()">Horarios</a>
   <a href="#contacto" onclick="toggleMob()">Contacto</a>
   <a href="#contacto" onclick="toggleMob()" class="mob-cta">Clase Gratis →</a>
+  <button class="mob-theme-btn" id="themeToggleMobile" type="button" onclick="toggleTheme()" aria-label="Cambiar tema">Modo día / noche</button>
 </div>
 
 <!-- HERO -->
@@ -2156,15 +2200,41 @@ document.querySelectorAll('.hero-pills .pill').forEach(pill=>{
 
 
 // TEMA
+const themeMeta = document.querySelector('meta[name="theme-color"]');
+const themeToggleBtn = document.getElementById('themeToggle');
+const mobileThemeToggleBtn = document.getElementById('themeToggleMobile');
+
+function applyTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('evo-theme', theme);
+
+  const isLight = theme === 'light';
+  const nextLabel = isLight ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro';
+
+  [themeToggleBtn, mobileThemeToggleBtn].forEach((btn) => {
+    if (!btn) return;
+    btn.setAttribute('aria-label', nextLabel);
+    btn.setAttribute('aria-pressed', String(isLight));
+    btn.setAttribute('title', nextLabel);
+  });
+
+  if (mobileThemeToggleBtn) {
+    mobileThemeToggleBtn.textContent = isLight ? '🌙 Pasar a modo oscuro' : '☀️ Pasar a modo día';
+  }
+
+  if (themeMeta) {
+    themeMeta.setAttribute('content', isLight ? '#f8f8f5' : '#080808');
+  }
+}
+
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
-  const next = current === 'light' ? 'dark' : 'light';
-  document.documentElement.setAttribute('data-theme', next);
-  localStorage.setItem('evo-theme', next);
+  applyTheme(current === 'light' ? 'dark' : 'light');
 }
+
 // Cargar tema guardado
 const savedTheme = localStorage.getItem('evo-theme') || 'dark';
-document.documentElement.setAttribute('data-theme', savedTheme);
+applyTheme(savedTheme);
 
 // CARRUSEL
 let carIdx = 0;

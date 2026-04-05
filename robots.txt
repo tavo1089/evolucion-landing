@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+# Reemplazar por tu dominio final al publicar en Hostinger
+Sitemap: https://tudominio.com/sitemap.xml
