@@ -165,6 +165,13 @@ nav.solid .nav-line{width:100%;}
 .nav-ham.open span:nth-child(2){opacity:0;}
 .nav-ham.open span:nth-child(3){transform:rotate(-45deg) translate(4px,-4px);}
 
+/* Wrapper mobile: toggle + hamburger — oculto en desktop */
+.nav-mobile-actions{
+  display:none;
+  align-items:center;
+  gap:8px;
+}
+
 /* MOBILE MENU */
 .mob{
   position:fixed;inset:0;background:rgba(8,8,8,0.97);
@@ -188,33 +195,6 @@ nav.solid .nav-line{width:100%;}
   font-size:16px !important;
   border-radius:100px;
   padding:16px 48px !important;
-}
-.mob-theme-btn{
-  margin-top:14px;
-  width:min(280px, calc(100% - 32px));
-  display:inline-flex;
-  align-items:center;
-  justify-content:center;
-  border:1px solid rgba(29,185,84,0.22);
-  background:rgba(29,185,84,0.08);
-  color:var(--blanco);
-  font-family:'Outfit',sans-serif;
-  font-weight:700;
-  font-size:15px;
-  letter-spacing:0.6px;
-  border-radius:100px;
-  padding:14px 22px;
-  transition:all 0.3s;
-}
-.mob-theme-btn:hover{
-  color:var(--negro);
-  background:var(--verde);
-  transform:translateY(-2px);
-}
-[data-theme="light"] .mob-theme-btn{
-  color:#111;
-  background:rgba(22,163,74,0.12);
-  border-color:rgba(22,163,74,0.22);
 }
 
 /* ══ HERO ══ */
@@ -450,8 +430,7 @@ nav.solid .nav-line{width:100%;}
   pointer-events:none;
 }
 .hero-logo-img{
-  width:min(82%, 420px);
-  max-width:100%;
+  width:82%;
   opacity:0;
   animation:logoIn 1.2s cubic-bezier(0.22,1,0.36,1) 0.5s forwards, logoFloat 10s ease-in-out 1.7s infinite;
   filter:drop-shadow(0 0 50px rgba(29,185,84,0.2));
@@ -941,7 +920,8 @@ nav.solid .nav-line{width:100%;}
 @media(max-width:900px){
   nav{padding:0 20px;}
   .nav-links,.nav-right{display:none;}
-  .nav-ham{display:flex !important;margin-left:auto;}
+  .nav-ham{display:flex !important;}
+  .nav-mobile-actions{display:flex !important;}
   .hero{grid-template-columns:1fr;}
   .hero-left{padding:100px 24px 60px;padding-right:24px;max-width:100%;}
   .hero-right{position:relative;top:auto;right:auto;bottom:auto;width:100%;height:280px;}
@@ -957,24 +937,46 @@ nav.solid .nav-line{width:100%;}
 @media(max-width:768px){
   nav{padding:10px 16px;height:auto;min-height:68px;}
   nav.solid{height:auto;min-height:64px;}
-  .nav-logo{gap:10px;max-width:calc(100% - 64px);}
+  .nav-links,.nav-right{display:none !important;}
+  .nav-mobile-actions{display:flex !important;}
+  .nav-ham{display:flex !important;}
+  .nav-logo{gap:10px;max-width:75%;}
   .nav-logo img{height:38px;}
   .nav-brand{font-size:15px;letter-spacing:1px;line-height:1.05;}
-  .theme-toggle{display:none;}
   .mob a{font-size:32px;}
   .mob-cta{font-size:15px !important;padding:14px 28px !important;}
 
-  .hero{min-height:auto;grid-template-columns:1fr;}
-  .hero-left{padding:96px 18px 40px;padding-right:18px;max-width:100%;align-items:flex-start;text-align:left;}
-  .hero-right{position:relative;top:auto;right:auto;bottom:auto;width:100%;height:160px;margin-top:4px;display:flex;align-items:center;justify-content:center;}
-  .hero-logo-img{width:min(56vw,200px);max-width:200px;}
-  .hero-title{font-size:clamp(40px,14vw,58px);letter-spacing:-1.5px;text-align:left;}
-  .hero-sub{margin-top:20px;font-size:12px;letter-spacing:1.2px;}
-  .hero-tag{font-size:9px;letter-spacing:2px;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+  .hero{min-height:auto;grid-template-columns:1fr;display:flex;flex-direction:column;}
+  .hero-left{
+    padding:40px 18px 36px;
+    padding-right:18px;
+    max-width:100%;
+    order:2;
+    text-align:left;
+  }
+  .hero-right{
+    position:relative;top:auto;right:auto;bottom:auto;
+    width:100%;
+    height:280px;
+    order:1;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:visible;
+    padding:0;
+  }
+  .hero-logo-img{
+    width:min(52vw,210px);
+    position:relative;
+    margin-top:64px;
+  }
+  .hero-title{font-size:clamp(52px,16vw,72px);letter-spacing:-2px;line-height:0.9;}
+  .hero-sub{margin-top:20px;font-size:12px;letter-spacing:1.2px;text-align:left;}
+  .hero-tag{font-size:9px;letter-spacing:2px;gap:8px;flex-wrap:wrap;margin-bottom:18px;justify-content:flex-start;}
   .hero-tag::before{width:18px;}
-  .hero-pills{gap:8px;margin-top:24px;}
-  .pill{font-size:10px;letter-spacing:1px;padding:8px 12px;}
-  .hero-ctas{flex-direction:column;gap:10px;margin-top:30px;}
+  .hero-pills{gap:8px;margin-top:24px;justify-content:flex-start;}
+  .pill{font-size:10px;letter-spacing:1px;padding:8px 14px;}
+  .hero-ctas{flex-direction:column;gap:10px;margin-top:28px;}
   .btn-main,.btn-ghost{width:100%;display:flex;align-items:center;justify-content:center;padding:14px 18px;}
   .hero-scroll{display:none;}
 
@@ -983,15 +985,16 @@ nav.solid .nav-line{width:100%;}
   .stat-n{font-size:42px;}
 
   .section,.sec-bg{padding:60px 16px;}
-  .s-tag{font-size:9px;letter-spacing:2.5px;gap:8px;}
+  .s-tag{font-size:9px;letter-spacing:2.5px;gap:8px;text-align:left;justify-content:flex-start;}
   .s-tag::before{width:18px;}
-  .s-title{font-size:clamp(30px,8vw,42px);margin-bottom:36px;}
+  .s-title{font-size:clamp(30px,8vw,42px);margin-bottom:36px;text-align:left;}
 
   .carrusel-section{padding:60px 0;}
-  .carrusel-header{padding:0 16px;margin-bottom:24px;flex-direction:column;align-items:flex-start;gap:14px;}
+  .carrusel-header{padding:0 16px;margin-bottom:24px;flex-direction:column;align-items:flex-start;gap:14px;text-align:left;}
+  .carrusel-header > div:first-child{width:100%;text-align:left;}
   .carrusel-track-wrap{padding:0 16px;}
   .car-slide{width:100%;}
-  .car-slide-tag{left:14px;bottom:14px;font-size:8px;letter-spacing:1.5px;padding:5px 10px;}
+  .car-slide-tag{left:14px;bottom:8px;font-size:8px;letter-spacing:1.5px;padding:5px 10px;}
 
   .disc-item{grid-template-columns:1fr;gap:14px;padding:18px;}
   .disc-name{font-size:22px;}
@@ -1032,15 +1035,15 @@ nav.solid .nav-line{width:100%;}
 
 @media(max-width:480px){
   nav{padding:8px 12px;}
-  .nav-logo{max-width:calc(100% - 56px);}
+  .nav-logo{max-width:80%;}
   .nav-brand{font-size:13px;}
   .mob a{font-size:28px;}
 
-  .hero-left{padding:88px 14px 32px;padding-right:14px;max-width:100%;align-items:flex-start;text-align:left;}
-  .hero-right{height:132px;}
-  .hero-logo-img{width:min(50vw,150px);max-width:150px;}
-  .hero-title{font-size:clamp(34px,13vw,46px);}
+  .hero-left{padding:32px 14px 28px;padding-right:14px;max-width:100%;}
+  .hero-right{height:240px;padding:0;}
+  .hero-title{font-size:clamp(48px,15vw,64px);letter-spacing:-2px;}
   .hero-sub{font-size:11px;}
+  .hero-logo-img{width:min(50vw,185px);margin-top:60px;}
   .pill{width:calc(50% - 4px);text-align:center;justify-content:center;}
 
   .stats{grid-template-columns:1fr;}
@@ -1121,7 +1124,7 @@ nav.solid .nav-line{width:100%;}
 }
 .car-slide-tag {
   position: absolute;
-  bottom: 24px; left: 28px;
+  bottom: 12px; left: 28px;
   font-family: 'Space Mono', monospace;
   font-size: 9px; letter-spacing: 3px;
   color: rgba(242,242,237,0.7);
@@ -1704,10 +1707,13 @@ footer {
   </ul>
 
   <div class="nav-right">
-    <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" title="Cambiar tema" aria-label="Cambiar a modo claro" aria-pressed="false"></button>
+    <button class="theme-toggle" id="themeToggle" type="button" onclick="toggleTheme()" title="Cambiar tema"></button>
     <a href="#contacto" class="nav-cta">Clase Gratis</a>
   </div>
-  <button class="nav-ham" id="ham" type="button" onclick="toggleMob()" aria-label="Abrir menú"><span></span><span></span><span></span></button>
+  <div class="nav-mobile-actions">
+    <button class="theme-toggle" id="themeToggleMob" type="button" onclick="toggleTheme()" title="Cambiar tema"></button>
+    <button class="nav-ham" id="ham" type="button" onclick="toggleMob()"><span></span><span></span><span></span></button>
+  </div>
 </nav>
 
 <div class="mob" id="mob">
@@ -1716,7 +1722,6 @@ footer {
   <a href="#horarios" onclick="toggleMob()">Horarios</a>
   <a href="#contacto" onclick="toggleMob()">Contacto</a>
   <a href="#contacto" onclick="toggleMob()" class="mob-cta">Clase Gratis →</a>
-  <button class="mob-theme-btn" id="themeToggleMobile" type="button" onclick="toggleTheme(); toggleMob()" aria-label="Cambiar tema">Modo día / noche</button>
 </div>
 
 <!-- HERO -->
@@ -2188,43 +2193,15 @@ document.querySelectorAll('.hero-pills .pill').forEach(pill=>{
 
 
 // TEMA
-const themeMeta = document.querySelector('meta[name="theme-color"]');
-const themeToggleBtn = document.getElementById('themeToggle');
-const mobileThemeToggleBtn = document.getElementById('themeToggleMobile');
-
-function applyTheme(theme) {
-  document.documentElement.setAttribute('data-theme', theme);
-  document.body?.setAttribute('data-theme', theme);
-  document.documentElement.style.colorScheme = theme === 'light' ? 'light' : 'dark';
-  localStorage.setItem('evo-theme', theme);
-
-  const isLight = theme === 'light';
-  const nextLabel = isLight ? 'Cambiar a modo oscuro' : 'Cambiar a modo claro';
-
-  [themeToggleBtn, mobileThemeToggleBtn].forEach((btn) => {
-    if (!btn) return;
-    btn.setAttribute('aria-label', nextLabel);
-    btn.setAttribute('aria-pressed', String(isLight));
-    btn.setAttribute('title', nextLabel);
-  });
-
-  if (mobileThemeToggleBtn) {
-    mobileThemeToggleBtn.textContent = isLight ? '🌙 Pasar a modo oscuro' : '☀️ Pasar a modo día';
-  }
-
-  if (themeMeta) {
-    themeMeta.setAttribute('content', isLight ? '#f8f8f5' : '#080808');
-  }
-}
-
 function toggleTheme() {
   const current = document.documentElement.getAttribute('data-theme');
-  applyTheme(current === 'light' ? 'dark' : 'light');
+  const next = current === 'light' ? 'dark' : 'light';
+  document.documentElement.setAttribute('data-theme', next);
+  localStorage.setItem('evo-theme', next);
 }
-
 // Cargar tema guardado
 const savedTheme = localStorage.getItem('evo-theme') || 'dark';
-applyTheme(savedTheme);
+document.documentElement.setAttribute('data-theme', savedTheme);
 
 // CARRUSEL
 let carIdx = 0;
