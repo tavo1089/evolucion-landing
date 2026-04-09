@@ -2283,16 +2283,16 @@ if(dateInput){
 const N8N_WEBHOOK_URL = 'https://n8n.femaxaiautomation.com/webhook/evolucion-leads';
 
 function sendLeadToN8n(payload){
-  if(!N8N_WEBHOOK_URL || N8N_WEBHOOK_URL.includes('TU-N8N-DOMINIO')){
-    return Promise.resolve(false);
-  }
-
-  const body = JSON.stringify({
-    ...payload,
-    source:'evolucion-landing',
-    page:window.location.href,
-    submittedAt:new Date().toISOString()
-  });
+  fetch('https://n8n.femaxaiautomation.com/webhook/evolucion-leads', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    mode: 'no-cors',
+    body: JSON.stringify({
+      ...payload,
+      fecha_envio: new Date().toISOString()
+    })
+  }).catch(err => console.log('Webhook error:', err));
+});
 
   try{
     if(navigator.sendBeacon){
