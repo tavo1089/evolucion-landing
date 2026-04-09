@@ -2280,6 +2280,44 @@ if(dateInput){
   });
 }
 
+const N8N_WEBHOOK_URL = 'https://TU-N8N-DOMINIO/webhook/evolucion-landing';
+
+function sendLeadToN8n(payload){
+  if(!N8N_WEBHOOK_URL || N8N_WEBHOOK_URL.includes('TU-N8N-DOMINIO')){
+    return Promise.resolve(false);
+  }
+
+  const body = JSON.stringify({
+    ...payload,
+    source:'evolucion-landing',
+    page:window.location.href,
+    submittedAt:new Date().toISOString()
+  });
+
+  try{
+    if(navigator.sendBeacon){
+      const blob = new Blob([body], {type:'application/json'});
+      const queued = navigator.sendBeacon(N8N_WEBHOOK_URL, blob);
+      if(queued) return Promise.resolve(true);
+    }
+  } catch(err){
+    console.warn('No se pudo enviar con sendBeacon', err);
+  }
+
+  return fetch(N8N_WEBHOOK_URL,{
+    method:'POST',
+    headers:{'Content-Type':'application/json'},
+    body,
+    keepalive:true,
+    mode:'cors'
+  })
+    .then(()=>true)
+    .catch(err=>{
+      console.warn('No se pudo enviar a n8n', err);
+      return false;
+    });
+}
+
 function sendWA(){
   const nameInput=document.getElementById('contactName');
   const phoneInput=document.getElementById('contactPhone');
@@ -2308,8 +2346,20 @@ function sendWA(){
   if(!consent.checked){alert('Debés aceptar la Política de Privacidad para continuar.');return;}
   const i=interestInput?.value || '';
   const tu=shiftInput?.value || '';
-  const mensaje = `Hola! Quiero mi clase gratis 💪\nNombre: ${n}\nWhatsApp: ${t}\nEmail: ${e}\nInterés: ${i||'Sin especificar'}\nTurno: ${tu||'Sin especificar'}\nFecha preferida: ${formatDateForDisplay(fecha)}`;
+  const fechaFormateada = formatDateForDisplay(fecha);
+  const mensaje = `Hola! Quiero mi clase gratis 💪\nNombre: ${n}\nWhatsApp: ${t}\nEmail: ${e}\nInterés: ${i||'Sin especificar'}\nTurno: ${tu||'Sin especificar'}\nFecha preferida: ${fechaFormateada}`;
   window.open(`https://wa.me/59891367421?text=${encodeURIComponent(mensaje)}`,'_blank');
+  sendLeadToN8n({
+    formType:'clase-gratis',
+    name:n,
+    phone:t,
+    email:e,
+    interest:i || 'Sin especificar',
+    shift:tu || 'Sin especificar',
+    preferredDate:fecha || '',
+    preferredDateLabel:fechaFormateada,
+    consentAccepted:true
+  });
 }
 
 function sendPlanWA(){
@@ -2319,6 +2369,12 @@ function sendPlanWA(){
   if(!n||!t||!p){alert('Completá nombre, WhatsApp y plan');return;}
   const mensaje = `Hola! Me interesa este plan 💪\nNombre: ${n}\nWhatsApp: ${t}\nPlan: ${p}`;
   window.open(`https://wa.me/59891367421?text=${encodeURIComponent(mensaje)}`,'_blank');
+  sendLeadToN8n({
+    formType:'consulta-plan',
+    name:n,
+    phone:t,
+    plan:p
+  });
 }
 </script>
 </body>
